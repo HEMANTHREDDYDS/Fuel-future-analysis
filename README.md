@@ -1,137 +1,144 @@
-# Fuel Market Insights — Power BI Dashboard
+Fuel Market Insights: Power BI Dashboard Suite
+Exploratory Analysis of Oil, Gas, and Other Fuel Futures — Price Trends, Volatility, and Fuel-Type Comparison
 
-A Power BI project I built to make sense of 23 years of oil, gas and fuel futures data — where the market moved, when it broke, and what that means if you're trying to trade or plan around it.
+Executive Summary
+Stakeholders, traders, and researchers involved in the mining, trading, and refining of fuels need a way to understand price behavior, market volatility, and trading opportunities across oil, gas, and other fuel futures — but raw futures-contract data on its own does not surface these patterns.
 
-## Why I built this
+This project analyzes a historical dataset of futures contracts linked to Crude Oil, Natural Gas, Heating Oil, RBOB Gasoline, and Brent Crude Oil, spanning 23 August 2000 to 29 December 2023, to uncover trend patterns, market volatility, seasonal behavior, and the impact of global events on fuel prices.
 
-Futures data on oil and gas is everywhere, but most of it just sits in spreadsheets. Nobody actually looks at it until something goes wrong — a price spike, a crash, a pandemic. I wanted to build something that lets you *see* the market move: when open positions surged, when volatility spiked, and how the five major fuel types (Crude Oil, Natural Gas, Heating Oil, RBOB Gasoline, Brent Crude Oil) stack up against each other.
+The analysis focuses on three core areas:
 
-So instead of a report full of numbers, I built a 6-page interactive dashboard that answers the questions a trader, analyst, or researcher would actually ask: *is this a good time to be in the market? which fuel is the safest bet? what happened in 2008, and again in 2020, and why?*
-fuel-market-insights/
-│
-├── README.md
-├── dashboard_powerbi.pbix → the full Power BI file, open it in Power BI Desktop
-├── report.pdf → the written business intelligence report
-│
-└── images/
-├── 01_home.png
-├── 02_annual_market_overview.png
-├── 03_market_fluctuation_insights.png
-├── 04_yearly_matrix_position_overview.png
-├── 05_dynamic_market_analytics.png
-└── 06_fuel_type_market_overview.png
+Market trends over time – tracking open positions, close prices, and trading volume across two decades
+Volatility and risk – identifying periods of sharp price change and quantifying market fluctuation
+Fuel-type comparison – understanding how Crude Oil, Natural Gas, Heating Oil, RBOB Gasoline, and Brent Crude Oil compare in price and volume
 
+Using Power BI and DAX, the futures dataset was modeled and explored through KPI cards, trend charts, and comparison visuals across a six-page interactive dashboard.
 
----
+Business Questions
+This investigation focuses on answering several key analytical questions:
 
-## The dashboard
+What are the important trends in the fuel-energy industry over the 2000–2023 period?
+How do price fluctuation patterns help identify market trends and turning points?
+Can price fluctuation and volatility be measured, and if so, how?
+How does historical futures data help in predicting trading opportunities and identifying periods of risk?
+How does trading volume relate to price fluctuation over time?
+What patterns can be observed when comparing Crude Oil, Heating Oil, and other fuel types?
 
-### Home
-Every good dashboard needs a front door. This is mine — a simple landing page that routes to each of the five analysis views.
+Dataset
+The project uses a single historical futures dataset covering oil, gas, and other fuel contracts, sourced from Kaggle's "Oil, Gas and Other Fuels Future Data":
 
-![Home page](images/01_home.png)
+Date, Open, High, Low, Close, Volume, and Ticker fields for each trading day
+Fuel_Type field distinguishing Crude Oil, Natural Gas, Heating Oil, RBOB Gasoline, and Brent Crude Oil
+Reporting period from 23 August 2000 to 29 December 2023
 
-### Annual Market Overview
-This is the page I keep coming back to. Four charts, one story: the market was basically flat and quiet until 2005, then it woke up.
+These variables allow analysis of how price, volume, and volatility have evolved over time, and how they differ across fuel types.
 
-![Annual Market Overview](images/02_annual_market_overview.png)
+Data Cleaning and Preparation
+Before performing the analysis, the raw futures dataset was reviewed to ensure it was structurally sound and ready for reliable trend and volatility calculation. Proper data preparation is essential because inconsistent dates or ticker/fuel-type labels can distort time-series aggregations and comparisons.
 
-- **Total open positions climbed from under 1bn in 2000 to a peak of 54bn in 2018.** That's not gradual growth — it's a market that fundamentally changed scale.
-- **2008 stands out as the most volatile year on record**, with a daily price change of –556 and average close price swinging up to 63 before collapsing. That's the global financial crisis showing up directly in the data.
-- **2020 is the other obvious scar** — volume spiked toward 13.7M and the average close price dropped as low as –2 in places, which lines up exactly with the pandemic disruption to fuel demand.
-- Trading volume has a clear long-term upward trend, from under 0.1M in the early 2000s to consistently multi-million-unit days by the 2020s.
+Several validation steps were applied prior to loading the data into Power BI.
 
-### Market Fluctuation Insights
-This page is about volatility specifically — not just "did the price move" but "how violently."
+Data Structure Validation
+The dataset was first reviewed to understand its structure.
 
-![Market Fluctuation Insights](images/03_market_fluctuation_insights.png)
+Date, Open, High, Low, Close, Volume, Ticker, and Fuel_Type fields were confirmed present and consistently populated across the full 2000–2023 date range.
+The five fuel-type categories (Crude Oil, Natural Gas, Heating Oil, RBOB Gasoline, Brent Crude Oil) were verified against the Ticker field.
 
-- **2022 had the single most extreme swing in the whole dataset:** +75% positive change followed almost immediately by a –74% negative change in the same window. That kind of whiplash is exactly the sort of thing a risk manager needs to see coming.
-- The 7-day rolling average close price tells a smoother story: a steady climb from 9 in 2000 to a peak of 44 around 2013, a pullback through 2015–2020, then a recovery back up to 32 by 2023.
-- High and low prices track each other almost perfectly across the years — which makes sense for futures contracts, but it's still satisfying to see it confirmed rather than assumed.
+This step confirmed the dataset was ready for further validation.
 
-### Yearly Matrix Position Overview
-The numbers-first page. If you just want the totals without wading through charts, this is it.
+Date Field Validation
+The Date field was validated as a proper date type to support year-wise, monthly, and rolling-average time-intelligence calculations used throughout the report.
 
-![Yearly Matrix Position Overview](images/04_yearly_matrix_position_overview.png)
+Fuel-Type Consistency Check
+The Fuel_Type field was reviewed to ensure consistent labeling across all five categories, which underpins every fuel-type comparison visual in the report (Close by Fuel_Type, Volume by Fuel_Type, Open/High/Low by Fuel_Type).
 
-- **Total open positions: 615.25bn**
-- **Total close positions: 614.99bn**
-- **Total volume: 14bn**
-- 2008 alone accounts for roughly 7% of total open and close positions across the full 23-year period — a single year carrying an outsized share of all trading activity in the dataset.
+Price and Volume Field Validation
+Each numeric column was reviewed to confirm correct formatting.
 
-### Dynamic Market Analytics
-This is the "drill into a specific window" page — four KPI cards plus two charts that update live as you move the date slicer.
+Open, High, Low, Close, and Daily Price Change were validated as numeric price fields.
+Volume was validated as a numeric field to support sum, maximum, and rolling-average calculations.
 
-![Dynamic Market Analytics](images/05_dynamic_market_analytics.png)
+Correct formatting ensures that DAX measures and Power BI visuals produce accurate calculations.
 
-- **Average daily close price across the full period: 27.92**
-- **7-day rolling average: 32.32**
-- **Price volatility index: 0.41**
-- **Max single-day volume: 2M**
-- The annual daily price change chart makes the crisis years jump out immediately — 2008 (–556), 2015 (–462), 2020 (–284) are all clearly the worst years to have been holding a long position, while 2013 (+140) and 2021 (+292) were the strongest recovery years.
+Prepared Dataset
+After cleaning and validation, the dataset was ready for KPI calculation and dashboard build.
 
-### Fuel Type Market Overview
-And finally — how do the five fuel types actually compare to each other?
+The prepared dataset was then used to analyze:
 
-![Fuel Type Market Overview](images/06_fuel_type_market_overview.png)
+year-wise open positions and daily price change
+average and rolling average close price over time
+overall trading volume by date
+percentage positive/negative price change trends
+fuel-type comparison across Open, High, Low, Close, and Volume
 
-- **Crude Oil, Natural Gas, Heating Oil and RBOB Gasoline are remarkably close to each other** across open, high, low and close prices — all sitting within about a percentage point of one another (roughly 20.5% share each).
-- **Brent Crude Oil is the clear outlier, consistently 2–3 percentage points lower** across every single metric — open, high, low, close, and volume. It's the smallest, least active of the five markets in this dataset.
-- Volume tells the same story: Crude Oil, Natural Gas, Heating Oil and RBOB Gasoline are all sitting around 20.4–20.5% of total volume, while Brent Crude trails at 18.1%.
+Analytical Methodology
+After validating the data, the analysis followed a structured modeling and dashboard-design workflow.
 
----
+KPI and Measure Design
+DAX measures were built to calculate Total_Open_Positions, Total_Close_Positions, Total_Volume, Max_Volume, Avg Daily Close Price, Rolling Average Close Price, and Price Volatility.
 
-## How I built it
+Time-Series and Trend Analysis
+Year-wise and date-wise measures tracked Open Positions, Daily Price Change, Average Close Price, Overall Volume, and a 7-day Rolling Average Close Price across the full 2000–2023 period.
 
-**Data prep (Power Query):** the raw data came in as five separate tables, one per fuel type. I appended them into a single table using `Table.Combine`, then used a `Table.NestedJoin` to merge the fuel type label back in — so every row is tagged by which fuel it belongs to, which is what makes the fuel-type comparison page possible.
+Volatility and Change Analysis
+Percentage Positive Change and Percentage Negative Change measures were calculated year over year to quantify market swings and identify periods of high volatility, such as 2008, 2012, and 2022.
 
-**Data model:** a straightforward star-schema-style setup, with the combined fuel data as the fact table and the individual fuel tables feeding into it.
+Fuel-Type Segmentation
+Open, High, Low, Close, and Volume were aggregated and compared across the five fuel types (Crude Oil, Natural Gas, Heating Oil, RBOB Gasoline, Brent Crude Oil) to surface market-share and pricing differences.
 
-**DAX:** most of the interesting logic lives here. A few worth calling out:
+Dashboard Design
+The validated KPIs and segments were built into a six-page Power BI report — Home, Annual Market Overview, Market Fluctuation Insights, Yearly Matrix Position and Overview, Dynamic Market Analytics, and Fuel Type Market Overview — allowing stakeholders to move from headline trend to fuel-type-level detail.
 
-```DAX
-Rolling Average Close Price =
-VAR Numdays = 7
-VAR RollingAverage =
-    CALCULATE(
-        AVERAGE('Append'[close]),
-        DATESINPERIOD('Append'[date], LASTDATE('Append'[date]), -Numdays, DAY)
-    )
-RETURN RollingAverage
-```
+Key Market Insights
+Year-wise Open Positions and Market Turning Points
+Total open positions rose steadily from 1bn in 2000 to a peak of 54bn in 2018, with 2009 marking an off-market dip tied to the global economic downturn and 2020 marking a pandemic-driven pullback to 25bn before recovering to 42bn in 2021 and 34bn in 2022.
 
-```DAX
-Price Volatility =
-AVERAGEX('Append', ABS('Append'[close] - 'Append'[open]))
-```
+Daily Price Change and Trading Volume
+2008 saw a sharp negative daily price change (-556) alongside rising trading volume (526.75M), while 2013 (+140) and 2021 (+292) marked periods of positive price change and robust volume — with 2020's negative price change (-284) again reflecting pandemic-driven disruption.
 
-```DAX
-PercentagePositiveChange =
-DIVIDE([PositivePriceChanges], [TotalPriceChanges], 0)
-```
+Average and Rolling Average Close Price
+Average close price climbed from 32.05 in August 2000 to a peak of 56.22 in July 2008, dipped to 10.73 in January 2009, recovered to 41.93 by May 2019, fell again to 11.89 during the 2020 pandemic dip, and rebounded to 45.73 by June 2022 — a pattern mirrored in the 7-day rolling average, which peaked at 44.24 in 2013.
 
-The full set of measures — total open/close positions, daily price change, positive/negative change splits, and the date-part helpers (Year, Month, Quarter, Day) — is documented with explanations in `report.pdf`.
+Market Volatility (Percentage Change Trends)
+Year-over-year percentage positive/negative change trends show the market at its most turbulent in 2008 (global financial crisis) and 2022, when negative change reached -73.60% against a positive swing of 74.60% — highlighting extreme volatility rather than steady directional movement.
 
-**Design:** dark maroon and amber theme, built to look like a trading terminal rather than a corporate slide deck. Every page has a date slicer (23-08-2000 to 29-12-2023) so you can zoom into any window you care about.
+Seasonal Patterns (Aggregated High and Low Prices)
+Monthly aggregation shows February typically posts the lowest high/low prices of the year, while August consistently peaks (Sum of High ≈ 337K, Sum of Low ≈ 328K), pointing to a seasonal summer rise in fuel prices, with December settling into more stable year-end values.
 
----
+Fuel-Type Comparison
+Crude Oil leads the market with the highest total volume (2.90B) and close-price share (20.53%), closely followed by Natural Gas and Heating Oil, while Brent Crude Oil consistently trails the other four fuel types across Open, High, Low, Close, and Volume — with a notably lower close-price share of 17.96%.
 
-## What I'd tell someone using this data to trade or plan around it
+Tools Used
+Microsoft Power BI and DAX
 
-1. **Crude Oil dominates.** If you're only going to track one fuel type closely, this is the one — it consistently leads on volume, open price, and high value.
-2. **Watch for the pattern, not just the number.** 2008 and 2020 both show the same signature: a volume spike paired with a sharp negative price change. That combination is a useful early-warning signal, not just a historical curiosity.
-3. **Diversify across fuel types where you can.** Crude Oil, Natural Gas, Heating Oil and RBOB Gasoline move closely together, so spreading across just those four doesn't buy you much protection — Brent Crude Oil is genuinely the odd one out and worth holding as a hedge.
-4. **The 7-day rolling average smooths out noise better than the raw daily close.** If you're building any kind of trend-following logic on top of this data, start there.
+Key techniques demonstrated in this project include:
 
----
+DAX time-intelligence measures (year-wise trends, 7-day rolling averages)
+DAX volatility measures (percentage positive/negative change, price volatility)
+Multi-page Power BI report design (Home, Annual Overview, Fluctuation Insights, Yearly Matrix, Dynamic Analytics, Fuel Type Overview)
+Fuel-type segmentation and comparison across Open, High, Low, Close, and Volume
+KPI card design (Total Open/Close Positions, Total Volume, Max Volume, Rolling Average, Price Volatility)
 
+Analytical Limitations and Future Improvements
+While the dataset provides useful insight into fuel futures market behavior, several limitations exist.
 
-## Full write-up
+The dataset covers price and volume data only, without underlying drivers such as geopolitical events, OPEC decisions, or supply/demand fundamentals that could explain specific spikes and dips.
+The analysis is based on historical futures data through 2023, limiting visibility into more recent market conditions.
+Volatility is measured through percentage change and rolling averages rather than a formal risk model, so it describes historical fluctuation rather than forecasting future price movement.
 
-The complete business intelligence report — methodology, every chart broken down with figures, the DAX and M query documentation, and the self-assessment — is in `report.pdf`.
-**Author:** Hemanth Kumar Reddy Bogathi
-**Dataset:** [Oil, Gas and Other Fuels Future Data](https://www.kaggle.com/) (Kaggle).
-**Tools:** Power BI Desktop · DAX · Power Query (M)
+Future improvements could include:
 
----
+integrating macroeconomic or geopolitical event data to explain specific volatility spikes
+extending the dataset with more recent futures data for ongoing monitoring
+building a forecasting model to project future price trends by fuel type
+adding correlation analysis between fuel types to identify hedging opportunities
+
+Conclusion
+The analysis demonstrates that fuel futures markets can be clearly understood through a structured framework of open positions, price trends, volatility, and fuel-type comparison.
+
+Crude Oil dominates the market by volume and price share, while Heating Oil and Natural Gas remain steady secondary markets, and volatility is concentrated around major global events such as the 2008 financial crisis and the 2020 pandemic.
+
+The findings highlight how a well-modeled Power BI dashboard can transform raw futures-contract data into decision-ready insight on market trends, risk periods, and fuel-type performance.
+
+Author: HEMANTH
+— Fuel Market Insights Power BI Dashboard
